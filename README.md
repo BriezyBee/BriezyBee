@@ -4,7 +4,7 @@
 - 💞️ I’m looking to collaborate on building a website!
 - 📫 How to reach me: Twitch.TV/BriezyBee
 - 😄 Pronouns: she/her
-- ⚡ Fun fact: ...
+- ⚡ Fun fact: I have a cheesy nickname.
 
 <!---
 BriezyBee/BriezyBee is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
