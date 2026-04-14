@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>🎲 Legendary Dice Roller | Roll with Style</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #1a2639 0%, #2a3b4c 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    /* main card container */
+    .roller-card {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(2px);
+      border-radius: 3rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 1.8rem 2rem 2.2rem;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,255,240,0.3);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2c3e50, #1e2a3a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: -0.3px;
+    }
+
+    h1 span {
+      font-size: 2rem;
+    }
+
+    .sub {
+      color: #4a5b6e;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid #e67e22;
+      padding-left: 0.8rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    /* result arena */
+    .result-arena {
+      background: #fef9ef;
+      border-radius: 2rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 6px 12px -8px rgba(0,0,0,0.2);
+      border: 1px solid #ffe1b9;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: #b97f44;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-size: 3.3rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #2c3e4e, #1f2c38);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .result-detail {
+      font-size: 1rem;
+      color: #3e5a6b;
+      margin-top: 0.5rem;
+      font-weight: 500;
+      border-top: 1px dashed #eeddbb;
+      padding-top: 0.6rem;
+    }
+
+    /* dice grid */
+    .section-title {
+      font-weight: 600;
+      margin: 1.2rem 0 0.9rem 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1e3c4a;
+      border-bottom: 2px solid #e0cfb1;
+      padding-bottom: 0.3rem;
+    }
+
+    .dice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .dice-btn {
+      background: #2c3e46;
+      border: none;
+      padding: 0.8rem 0.2rem;
+      border-radius: 2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 0 #121e24;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dice-btn span:first-child {
+      font-size: 1.3rem;
+    }
+
+    .dice-btn:hover {
+      transform: translateY(-2px);
+      background: #3e5a6b;
+      box-shadow: 0 5px 0 #121e24;
+    }
+
+    .dice-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #121e24;
+    }
+
+    .special-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .adv-btn {
+      background: #9b6a3c;
+      box-shadow: 0 3px 0 #5e3e1f;
+    }
+    .adv-btn:hover { background: #b87a44; }
+    .dis-btn {
+      background: #5f4c3b;
+      box-shadow: 0 3px 0 #3a2c20;
+    }
+    .dis-btn:hover { background: #7e624b; }
+
+    /* custom roll section */
+    .custom-area {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .custom-input-group {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    #customExpr {
+      flex: 3;
+      padding: 0.9rem 1rem;
+      border-radius: 3rem;
+      border: 2px solid #e2cfaa;
+      background: white;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: 0.2s;
+      text-align: center;
+      font-family: monospace;
+    }
+    #customExpr:focus {
+      border-color: #e67e22;
+      box-shadow: 0 0 0 3px rgba(230,126,34,0.2);
+    }
+    .custom-roll-btn {
+      flex: 1;
+      background: #2c5f6e;
+      box-shadow: 0 3px 0 #1a3a44;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+    }
+    .custom-roll-btn:hover {
+      background: #3f7e8c;
+    }
+    .example-hint {
+      font-size: 0.75rem;
+      color: #8f7a5c;
+      margin-left: 0.5rem;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      transform: translateY(0px);
+      cursor: not-allowed;
+      filter: grayscale(0.05);
+    }
+
+    footer {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 1.8rem;
+      color: #8f9aa8;
+    }
+
+    @media (max-width: 550px) {
+      .roller-card { padding: 1.2rem; }
+      .result-value { font-size: 2.3rem; }
+      .dice-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+      .dice-btn { font-size: 1rem; padding: 0.6rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="roller-card">
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+    <h1>
+      <span>🎲</span> Dice Forge
+    </h1>
+    <div class="sub">⚡ fate in your hands</div>
+  </div>
+
+  <!-- dynamic result panel -->
+  <div class="result-arena" id="resultArena">
+    <div class="result-label">⚡ LAST ROLL</div>
+    <div class="result-value" id="resultValue">—</div>
+    <div class="result-detail" id="resultDetail">click any dice to start</div>
+  </div>
+
+  <!-- Standard Dice -->
+  <div class="section-title">
+    <span>🎯</span> Standard Dice
+  </div>
+  <div class="dice-grid" id="diceGrid">
+    <!-- dynamically created? but static is fine, I'll generate by JS but better to write directly -->
+  </div>
+
+  <!-- Special d20 mechanics -->
+  <div class="section-title">
+    <span>✨</span> Special Rolls (d20)
+  </div>
+  <div class="special-group">
+    <button class="dice-btn adv-btn" id="advantageBtn">🎲 ADVANTAGE ⚡</button>
+    <button class="dice-btn dis-btn" id="disadvantageBtn">🎲 DISADVANTAGE 🌙</button>
+  </div>
+
+  <!-- Custom expression -->
+  <div class="section-title">
+    <span>🧙</span> Custom Roll (NdX)
+  </div>
+  <div class="custom-area">
+    <div class="custom-input-group">
+      <input type="text" id="customExpr" placeholder="e.g., 3d6, d20, 2d12, 4d100" value="2d6">
+      <button class="dice-btn custom-roll-btn" id="customRollBtn">🎲 ROLL</button>
+    </div>
+    <div class="example-hint">✨ Supports: 1d20, 3d8, d100 (count=1), up to 50 dice & sides ≤ 1000</div>
+  </div>
+  <footer>⚡ fair RNG | animated rolls | epic vibes</footer>
+</div>
+
+<script>
+  // ---------- DOM Elements ----------
+  const resultValueEl = document.getElementById('resultValue');
+  const resultDetailEl = document.getElementById('resultDetail');
+  const diceGrid = document.getElementById('diceGrid');
+  const advantageBtn = document.getElementById('advantageBtn');
+  const disadvantageBtn = document.getElementById('disadvantageBtn');
+  const customRollBtn = document.getElementById('customRollBtn');
+  const customExprInput = document.getElementById('customExpr');
+
+  // ---------- Dice Data ----------
+  const diceTypes = [
+    { name: 'd4', sides: 4, icon: '💎' },
+    { name: 'd6', sides: 6, icon: '⚪' },
+    { name: 'd8', sides: 8, icon: '🔶' },
+    { name: 'd10', sides: 10, icon: '🔮' },
+    { name: 'd12', sides: 12, icon: '🌟' },
+    { name: 'd20', sides: 20, icon: '🔥' },
+    { name: 'd100', sides: 100, icon: '🌀' }
+  ];
+
+  // ---------- Global Lock & Timer (for animation) ----------
+  let rollingActive = false;
+  let rollTimeout = null;
+
+  // Helper: disable all interactive rolling elements
+  function disableRollControls() {
+    const allRollButtons = document.querySelectorAll('.dice-btn, #advantageBtn, #disadvantageBtn, #customRollBtn');
+    allRollButtons.forEach(btn => btn.disabled = true);
+    customExprInput.disabled = true;
+  }
+
+  function enableRollControls() {
+    const allRollButtons = document.querySelectorAll('.dice-btn, #advantageBtn, #disadvantageBtn, #customRollBtn');
+    allRollButtons.forEach(btn => btn.disabled = false);
+    customExprInput.disabled = false;
+  }
+
+  // clean animation timeout & reset flag
+  function clearRollLock() {
+    if (rollTimeout) {
+      clearTimeout(rollTimeout);
+      rollTimeout = null;
+    }
+    rollingActive = false;
+    enableRollControls();
+  }
+
+  // show "rolling..." effect, then execute actual callback after short delay
+  function animateAndRoll(callbackLogic) {
+    if (rollingActive) return; // already rolling, ignore click
+    rollingActive = true;
+    disableRollControls();
+
+    // set visual rolling feedback
+    resultValueEl.innerHTML = '🎲 ✨ ...';
+    resultDetailEl.innerHTML = 'rolling the bones...';
+
+    // store timeout to avoid race
+    rollTimeout = setTimeout(() => {
+      try {
+        // execute the real roll logic (returns result object with display and optional detail)
+        const rollResult = callbackLogic();
+        if (rollResult && typeof rollResult === 'object') {
+          resultValueEl.innerHTML = rollResult.mainDisplay;
+          resultDetailEl.innerHTML = rollResult.detailText;
+        } else {
+          // fallback (should never happen)
+          resultValueEl.innerHTML = '?';
+          resultDetailEl.innerHTML = 'unexpected error';
+        }
+      } catch (err) {
+        console.warn(err);
+        resultValueEl.innerHTML = '⚠️ ERR';
+        resultDetailEl.innerHTML = err.message || 'invalid roll';
+      } finally {
+        // re-enable controls and clear flag
+        clearRollLock();
+      }
+      rollTimeout = null;
+    }, 180);
+  }
+
+  // ---------- Core Rolling Helpers ----------
+  function rollSingleDie(sides) {
+    if (sides < 1) sides = 1;
+    return Math.floor(Math.random() * sides) + 1;
+  }
+
+  // standard single die roll (for dice buttons)
+  function standardRoll(sides, dieName, customIcon = '🎲') {
+    const value = rollSingleDie(sides);
+    const mainDisplay = `${value}`;
+    const detailText = `${dieName}  →  ${value}`;
+    return { mainDisplay, detailText };
+  }
+
+  // d20 advantage: roll two d20, take higher
+  function advantageRoll() {
+    const first = rollSingleDie(20);
+    const second = rollSingleDie(20);
+    const best = Math.max(first, second);
+    const mainDisplay = `${best} ⚡`;
+    const detailText = `🎲 ADVANTAGE: ${first} , ${second} → BEST = ${best}`;
+    return { mainDisplay, detailText };
+  }
+
+  // d20 disadvantage: take lower
+  function disadvantageRoll() {
+    const first = rollSingleDie(20);
+    const second = rollSingleDie(20);
+    const worst = Math.min(first, second);
+    const mainDisplay = `${worst} 🌙`;
+    const detailText = `🎲 DISADVANTAGE: ${first} , ${second} → WORST = ${worst}`;
+    return { mainDisplay, detailText };
+  }
+
+  // parse NdX notation: supports "3d6", "d20", "2d100", "12d8" (ignore spaces)
+  function parseDiceNotation(expr) {
+    expr = expr.trim().replace(/\s/g, '');
+    if (expr === '') throw new Error('Empty expression');
+    // regex: capture count (optional) and sides (mandatory)
+    const match = expr.match(/^(\d*)d(\d+)$/i);
+    if (!match) throw new Error('Invalid format. Use like "2d6", "d20", "3d12"');
+    let count = match[1] === '' ? 1 : parseInt(match[1], 10);
+    let sides = parseInt(match[2], 10);
+    if (isNaN(count) || isNaN(sides)) throw new Error('Invalid numbers');
+    if (count <= 0) throw new Error('Number of dice must be >= 1');
+    if (sides <= 0) throw new Error('Dice sides must be >= 1');
+    if (count > 60) throw new Error('Too many dice! Max 60 dice per roll (performance & clarity)');
+    if (sides > 1000) throw new Error('Maximum sides allowed: 1000 (epic but sane)');
+    return { count, sides };
+  }
+
+  // custom roll: returns array of rolls, total, formatted string
+  function performCustomRoll(expr) {
+    const { count, sides } = parseDiceNotation(expr);
+    const rolls = [];
+    for (let i = 0; i < count; i++) {
+      rolls.push(rollSingleDie(sides));
+    }
+    const total = rolls.reduce((sum, val) => sum + val, 0);
+    let breakdown = '';
+    if (count === 1) {
+      breakdown = `${total}`;
+    } else {
+      // show first 12 dice max for readability, but full if reasonable
+      let rollsStr = rolls.join(' + ');
+      if (rollsStr.length > 85 && count > 12) {
+        rollsStr = rolls.slice(0, 10).join(' + ') + ` + … (${count-10} more)`;
+      } else {
+        rollsStr = rolls.join(' + ');
+      }
+      breakdown = `${total}  [${rollsStr}]`;
+    }
+    const mainDisplay = `${total}`;
+    const detailText = `${count}d${sides}  →  ${breakdown}`;
+    return { mainDisplay, detailText, rolls, total };
+  }
+
+  // ---------- Wrapper for animated roll (standard die button) ----------
+  function rollStandardDieWrapper(sides, dieName) {
+    return standardRoll(sides, dieName);
+  }
+
+  // ---------- UI Generation for dice buttons ----------
+  function buildDiceButtons() {
+    diceGrid.innerHTML = '';
+    diceTypes.forEach(die => {
+      const btn = document.createElement('button');
+      btn.className = 'dice-btn';
+      btn.innerHTML = `<span>${die.icon}</span><span>${die.name}</span>`;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        animateAndRoll(() => rollStandardDieWrapper(die.sides, die.name));
+      });
+      diceGrid.appendChild(btn);
+    });
+  }
+
+  // ---------- Event Binding for advantage/disadvantage & custom ----------
+  function bindSpecialEvents() {
+    advantageBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      animateAndRoll(() => advantageRoll());
+    });
+    disadvantageBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      animateAndRoll(() => disadvantageRoll());
+    });
+    customRollBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const rawExpr = customExprInput.value.trim();
+      if (!rawExpr) {
+        // show error quickly without lock (since we didn't enter animation yet)
+        if (!rollingActive) {
+          resultValueEl.innerHTML = '⚠️';
+          resultDetailEl.innerHTML = 'Enter a dice expression (e.g., 2d6)';
+        }
+        return;
+      }
+      animateAndRoll(() => {
+        try {
+          const customResult = performCustomRoll(rawExpr);
+          return { mainDisplay: customResult.mainDisplay, detailText: customResult.detailText };
+        } catch (err) {
+          // throw formatted error for user display
+          throw new Error(err.message || 'Invalid dice notation');
+        }
+      });
+    });
+  }
+
+  // optional: add keyboard shortcut for custom roll (Enter)
+  function enhanceCustomInput() {
+    customExprInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        customRollBtn.click();
+      }
+    });
+  }
+
+  // ---------- Additional flair: pre-roll example random welcome message (optional) ----------
+  function setWelcomeRoll() {
+    // just set a nice welcoming roll: roll a d20 for greeting
+    const welcomeRoll = rollSingleDie(20);
+    resultValueEl.innerHTML = `${welcomeRoll}`;
+    resultDetailEl.innerHTML = `🎲 Welcome! Roll your fate — try d20, advantage or custom dice.`;
+  }
+
+  // ---------- Initialize App ----------
+  function init() {
+    buildDiceButtons();
+    bindSpecialEvents();
+    enhanceCustomInput();
+    setWelcomeRoll();
+  }
+
+  init();
+</script>
+</body>
+</html>
