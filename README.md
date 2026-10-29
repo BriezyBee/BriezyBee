@@ -1,8 +1,8 @@
 - 👋 Hi, I’m @BriezyBee
 - 👀 I’m interested in perhaps everything there is to know!
-- 🌱 I’m currently learning HTML!
-- 💞️ I’m looking to collaborate on building a website!
-- 📫 How to reach me: Twitch.TV/BriezyBee
+- 🌱 I’m currently learning HTML, CSS, JavaScript, and Python!
+- 💞️ I’m looking to collaborate on building things!
+- 📫 How to reach me: briennaparsons22@gmail.com
 - 😄 Pronouns: she/her
 - ⚡ Fun fact: I have a cheesy nickname.
 
